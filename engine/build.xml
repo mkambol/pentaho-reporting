@@ -222,4 +222,8 @@ This is the build file for the collection of Shims modules to provide support
     </for>
   </target>
 
+  <target name="short-test" >
+        <ant antfile="build.xml" dir="testcases" useNativeBasedir="true" inheritall="false" target="short-test"/>
+  </target>
+
 </project> 
