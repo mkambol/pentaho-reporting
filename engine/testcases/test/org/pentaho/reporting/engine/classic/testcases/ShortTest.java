@@ -19,19 +19,20 @@
 package org.pentaho.reporting.engine.classic.testcases;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
-import junit.framework.Assert;
-import net.sourceforge.barbecue.env.HeadlessEnvironment;
+import static junit.framework.Assert.assertNotNull;
 import org.junit.Test;
-import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
-import org.pentaho.reporting.engine.classic.core.layout.ModelPrinter;
 import org.pentaho.reporting.engine.classic.core.testsupport.gold.GoldTestBase;
-import org.pentaho.reporting.engine.classic.core.testsupport.gold.GoldenSampleGenerator;
 import org.pentaho.reporting.libraries.base.util.IOUtils;
+import org.pentaho.reporting.libraries.base.util.MemoryByteArrayOutputStream;
 
 public class ShortTest extends GoldTestBase
 {
@@ -44,14 +45,28 @@ public class ShortTest extends GoldTestBase
   {
     final File file = new File("./test-gold/reports/Prd-3514.prpt");
 
-    final MasterReport originalReport = parseReport(file);
-    final MasterReport tunedReport = tuneForTesting(originalReport);
+    MasterReport originalReport = parseReport(file);
+    MasterReport tunedReport = tuneForTesting(originalReport);
     MasterReport report = postProcess(tunedReport);
 
     report = tuneForLegacyMode(report);
 
     final String fileName = IOUtils.getInstance().stripFileExtension(file.getName());
 
+    executeAndOutputReport(file, report, fileName);
+
+    originalReport = parseReport(file);
+    tunedReport = tuneForTesting(originalReport);
+    report = serializeDeserialize(tunedReport);
+    report = tuneForLegacyMode(report);
+
+    executeAndOutputReport(file, report, "SERIALIZE-" + fileName);
+  }
+
+  private void executeAndOutputReport(final File file,
+                                      final MasterReport report,
+                                      final String fileName) throws Exception
+  {
     File stream = new File(file.getParent(), fileName + "-table-stream-TEST.xml");
     File flow =new File(file.getParent(), fileName + "-table-flow-TEST.xml")  ;
     File table =new File(file.getParent(), fileName + "-table-page-TEST.xml");
@@ -66,6 +81,34 @@ public class ShortTest extends GoldTestBase
     outputFile(executeTableFlow(report), flow);
     outputFile(executeTablePage(report), table);
     outputFile(executePageable(report), page);
+  }
+
+  protected MasterReport serializeDeserialize(final MasterReport originalReport) throws Exception
+  {
+    //  if (true) return originalReport;
+    final byte[] bytes = serializeReportObject(originalReport);
+    final MasterReport report = deserializeReportObject(bytes);
+    return report;
+  }
+
+  private byte[] serializeReportObject(final MasterReport report) throws IOException
+  {
+    // we don't test whether our demo models are serializable :)
+    // clear all report properties, which may cause trouble ...
+    final MemoryByteArrayOutputStream bo = new MemoryByteArrayOutputStream();
+    final ObjectOutputStream oout = new ObjectOutputStream(bo);
+    oout.writeObject(report);
+    oout.close();
+    return bo.toByteArray();
+  }
+
+  private MasterReport deserializeReportObject(final byte[] data) throws IOException, ClassNotFoundException
+  {
+    final ByteArrayInputStream bin = new ByteArrayInputStream(data);
+    final ObjectInputStream oin = new ObjectInputStream(bin);
+    final MasterReport report2 = (MasterReport) oin.readObject();
+    assertNotNull(report2);
+    return report2;
   }
 
   public void outputFile(final byte[] reportOutput, final File file) throws Exception
