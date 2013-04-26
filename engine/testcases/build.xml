@@ -92,6 +92,14 @@
         </antcall>
     </target>
 
+    <target name="short-test" depends="">
+        <antcall target="test"> 
+            <param value="org.pentaho.reporting.engine.classic.testcases.ShortTest" name="testcase"/>
+        </antcall>
+    </target>
+
+
+
     <target name="longrun-cobertura" depends="clean-all,resolve">
         <antcall target="cobertura">
             <param name="junit.sysprop.org.pentaho.reporting.engine.classic.test.ExecuteLongRunningTest" value="true"/>
