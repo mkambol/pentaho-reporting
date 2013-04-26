@@ -30,6 +30,14 @@ import java.io.OutputStream;
 import static junit.framework.Assert.assertNotNull;
 import org.junit.Test;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
+import org.pentaho.reporting.engine.classic.core.ReportProcessingException;
+import org.pentaho.reporting.engine.classic.core.layout.output.ReportProcessor;
+import org.pentaho.reporting.engine.classic.core.modules.output.table.base.StreamReportProcessor;
+import org.pentaho.reporting.engine.classic.core.modules.output.table.html.FlowHtmlOutputProcessor;
+import org.pentaho.reporting.engine.classic.core.modules.output.table.html.HtmlOutputProcessor;
+import org.pentaho.reporting.engine.classic.core.modules.output.table.html.HtmlReportUtil;
+import org.pentaho.reporting.engine.classic.core.modules.output.table.xml.XmlTableOutputProcessor;
+import org.pentaho.reporting.engine.classic.core.modules.output.table.xml.internal.XmlTableOutputProcessorMetaData;
 import org.pentaho.reporting.engine.classic.core.testsupport.gold.GoldTestBase;
 import org.pentaho.reporting.libraries.base.util.IOUtils;
 import org.pentaho.reporting.libraries.base.util.MemoryByteArrayOutputStream;
@@ -71,6 +79,7 @@ public class ShortTest extends GoldTestBase
     File flow =new File(file.getParent(), fileName + "-table-flow-TEST.xml")  ;
     File table =new File(file.getParent(), fileName + "-table-page-TEST.xml");
     File page =new File(file.getParent(), fileName + "-page-TEST.xml");
+    File html =new File(file.getParent(), fileName + "-html-TEST.zip");
 
     stream.delete();
     flow.delete();
@@ -81,6 +90,9 @@ public class ShortTest extends GoldTestBase
     outputFile(executeTableFlow(report), flow);
     outputFile(executeTablePage(report), table);
     outputFile(executePageable(report), page);
+    OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(html));
+    HtmlReportUtil.createZIPHTML(report, outputStream, "prd-3514.html");
+
   }
 
   protected MasterReport serializeDeserialize(final MasterReport originalReport) throws Exception
@@ -124,5 +136,28 @@ public class ShortTest extends GoldTestBase
     }
   }
 
+  protected byte[] executeHtmlStream(final MasterReport report)
+      throws IOException, ReportProcessingException
+  {
+    final MemoryByteArrayOutputStream outputStream = new MemoryByteArrayOutputStream();
+    try
+    {
+      HtmlOutputProcessor processor = new FlowHtmlOutputProcessor();
+      final ReportProcessor streamReportProcessor = new StreamReportProcessor(report, processor);
+      try
+      {
+        streamReportProcessor.processReport();
+      }
+      finally
+      {
+        streamReportProcessor.close();
+      }
+    }
+    finally
+    {
+      outputStream.close();
+    }
+    return (outputStream.toByteArray());
+  }
 
 }
