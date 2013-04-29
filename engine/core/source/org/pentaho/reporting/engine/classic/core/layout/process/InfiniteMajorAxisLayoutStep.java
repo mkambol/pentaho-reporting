@@ -17,6 +17,10 @@
 
 package org.pentaho.reporting.engine.classic.core.layout.process;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 import org.pentaho.reporting.engine.classic.core.ElementAlignment;
 import org.pentaho.reporting.engine.classic.core.layout.model.FinishedRenderNode;
 import org.pentaho.reporting.engine.classic.core.layout.model.LayoutNodeTypes;
@@ -367,6 +371,24 @@ public final class InfiniteMajorAxisLayoutStep extends AbstractMajorAxisLayoutSt
           final long boxTop = box.getCachedY() + insetTop + (extraHeight / 2);
           final long delta = boxTop - childY1;
           CacheBoxShifter.shiftBoxChilds(box, delta);
+          if (box instanceof ParagraphRenderBox) {
+            PrintStream ps = null;
+            try {
+            ps =  new PrintStream(new FileOutputStream("output.log", true));
+            ps.println("ParagraphRenderBox ******");
+            ps.println("y: " + box.getCachedY());
+            ps.println("extraHeight: " + extraHeight);
+            ps.println("boxTop: " + boxTop);
+            ps.println("insetTop:   " + insetTop);
+            ps.println("childY1: " + childY1);
+            ps.println("computedContentHeight: " + computedContentHeight);
+            ps.println("usedHeight: " + usedHeight);
+            } catch (FileNotFoundException e) {
+
+            } finally {
+              ps.close();
+            }
+          }
         }
       }
     }

@@ -26,11 +26,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 
 import static junit.framework.Assert.assertNotNull;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.ReportProcessingException;
+import org.pentaho.reporting.engine.classic.core.layout.FileModelPrinter;
 import org.pentaho.reporting.engine.classic.core.layout.output.ReportProcessor;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.base.StreamReportProcessor;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.html.FlowHtmlOutputProcessor;
@@ -39,11 +43,16 @@ import org.pentaho.reporting.engine.classic.core.modules.output.table.html.HtmlR
 import org.pentaho.reporting.engine.classic.core.modules.output.table.xml.XmlTableOutputProcessor;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.xml.internal.XmlTableOutputProcessorMetaData;
 import org.pentaho.reporting.engine.classic.core.testsupport.gold.GoldTestBase;
+import org.pentaho.reporting.libraries.base.boot.PackageManager;
+import org.pentaho.reporting.libraries.base.util.DebugLog;
 import org.pentaho.reporting.libraries.base.util.IOUtils;
 import org.pentaho.reporting.libraries.base.util.MemoryByteArrayOutputStream;
 
 public class ShortTest extends GoldTestBase
 {
+
+  private static final Log LOGGER = LogFactory.getLog(PackageManager.class);
+
   public ShortTest()
   {
   }
@@ -51,7 +60,9 @@ public class ShortTest extends GoldTestBase
   @Test
   public void testOne() throws Exception
   {
+
     final File file = new File("./test-gold/reports/Prd-3514.prpt");
+
 
     MasterReport originalReport = parseReport(file);
     MasterReport tunedReport = tuneForTesting(originalReport);
@@ -63,12 +74,12 @@ public class ShortTest extends GoldTestBase
 
     executeAndOutputReport(file, report, fileName);
 
-    originalReport = parseReport(file);
-    tunedReport = tuneForTesting(originalReport);
-    report = serializeDeserialize(tunedReport);
-    report = tuneForLegacyMode(report);
+   // originalReport = parseReport(file);
+   // tunedReport = tuneForTesting(originalReport);
+   // report = serializeDeserialize(tunedReport);
+   // report = tuneForLegacyMode(report);
 
-    executeAndOutputReport(file, report, "SERIALIZE-" + fileName);
+   // executeAndOutputReport(file, report, "SERIALIZE-" + fileName);
   }
 
   private void executeAndOutputReport(final File file,
@@ -86,12 +97,15 @@ public class ShortTest extends GoldTestBase
     table.delete();
     page.delete();
 
-    outputFile(executeTableStream(report), stream);
-    outputFile(executeTableFlow(report), flow);
-    outputFile(executeTablePage(report), table);
+    FileModelPrinter fmp = new FileModelPrinter("model-");
+
+
+    //outputFile(executeTableStream(report), stream);
+    //outputFile(executeTableFlow(report), flow);
+    //outputFile(executeTablePage(report), table);
     outputFile(executePageable(report), page);
-    OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(html));
-    HtmlReportUtil.createZIPHTML(report, outputStream, "prd-3514.html");
+    //OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(html));
+    //HtmlReportUtil.createZIPHTML(report, outputStream, "prd-3514.html");
 
   }
 

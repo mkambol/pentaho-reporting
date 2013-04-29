@@ -94,6 +94,7 @@
 
     <target name="short-test" depends="">
         <antcall target="test"> 
+            <param value="../core/dist" name="devlib.dir"/>
             <param value="org.pentaho.reporting.engine.classic.testcases.ShortTest" name="testcase"/>
         </antcall>
     </target>
