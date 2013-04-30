@@ -1,19 +1,19 @@
 /*
- * This program is free software; you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License, version 2.1 as published by the Free Software
- * Foundation.
- *
- * You should have received a copy of the GNU Lesser General Public License along with this
- * program; if not, you can obtain a copy at http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
- * or from the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Lesser General Public License for more details.
- *
- * Copyright (c) 2001 - 2009 Object Refinery Ltd, Pentaho Corporation and Contributors..  All rights reserved.
- */
+  * This program is free software; you can redistribute it and/or modify it under the
+  * terms of the GNU Lesser General Public License, version 2.1 as published by the Free Software
+  * Foundation.
+  *
+  * You should have received a copy of the GNU Lesser General Public License along with this
+  * program; if not, you can obtain a copy at http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+  * or from the Free Software Foundation, Inc.,
+  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+  *
+  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  * See the GNU Lesser General Public License for more details.
+  *
+  * Copyright (c) 2001 - 2009 Object Refinery Ltd, Pentaho Corporation and Contributors..  All rights reserved.
+  */
 
 package org.pentaho.reporting.engine.classic.core.layout.model;
 
@@ -23,10 +23,12 @@ import java.io.PrintStream;
 
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.ReportAttributeMap;
-import org.pentaho.reporting.engine.classic.core.filter.types.bands.BandType;
+import
+    org.pentaho.reporting.engine.classic.core.filter.types.bands.BandType;
 import org.pentaho.reporting.engine.classic.core.layout.FileModelPrinter;
 import org.pentaho.reporting.engine.classic.core.layout.ModelPrinter;
-import org.pentaho.reporting.engine.classic.core.layout.model.context.NodeLayoutProperties;
+import
+    org.pentaho.reporting.engine.classic.core.layout.model.context.NodeLayoutProperties;
 import org.pentaho.reporting.engine.classic.core.metadata.ElementType;
 import org.pentaho.reporting.engine.classic.core.states.ReportStateKey;
 import org.pentaho.reporting.engine.classic.core.style.ElementStyleKeys;
@@ -34,11 +36,11 @@ import org.pentaho.reporting.engine.classic.core.style.StyleSheet;
 import org.pentaho.reporting.engine.classic.core.style.VerticalTextAlign;
 import org.pentaho.reporting.engine.classic.core.util.InstanceID;
 import org.pentaho.reporting.engine.classic.core.util.geom.StrictBounds;
-import org.pentaho.reporting.engine.classic.core.util.geom.StrictGeomUtility;
+import
+    org.pentaho.reporting.engine.classic.core.util.geom.StrictGeomUtility;
 import org.pentaho.reporting.libraries.base.config.Configuration;
 
-public abstract class RenderNode implements Cloneable
-{
+public abstract class RenderNode implements Cloneable {
   public enum CacheState
   {
     CLEAN, DIRTY, DEEP_DIRTY
@@ -50,6 +52,7 @@ public abstract class RenderNode implements Cloneable
   {
     final Configuration configuration = ClassicEngineBoot.getInstance().getGlobalConfig();
     if ("true".equals(configuration.getConfigProperty
+
         ("org.pentaho.reporting.engine.classic.core.layout.ParanoidChecks")))
     {
       paranoidModelChecks = true;
@@ -161,7 +164,8 @@ public abstract class RenderNode implements Cloneable
 
     this.cacheState = RenderNode.CACHE_DEEP_DIRTY;
     this.nodeLayoutProperties = new NodeLayoutProperties
-        (this.nodeLayoutProperties.getMajorAxis(), this.nodeLayoutProperties.getMinorAxis(),
+        (this.nodeLayoutProperties.getMajorAxis(),
+            this.nodeLayoutProperties.getMinorAxis(),
             styleSheet, attributes, instanceId, elementType);
   }
 
@@ -608,8 +612,7 @@ public abstract class RenderNode implements Cloneable
 //    return stickyMarker;
 //  }
 //
-//  public void setStickyMarker(final long stickyMarker)
-//  {
+//  public void setStickyMarker(final long stickyMarker) //  {
 //    this.stickyMarker = stickyMarker;
 //  }
 
@@ -769,29 +772,36 @@ public abstract class RenderNode implements Cloneable
     }
     this.cachedHeight = cachedHeight;
 
-    if (  ("14.024".equals(String.valueOf(StrictGeomUtility.toExternalValue(cachedHeight)))  ||
-        ("20.0".equals(String.valueOf(StrictGeomUtility.toExternalValue(cachedHeight)) )
-        )))
+    if (
+        ("14.024".equals(String.valueOf(StrictGeomUtility.toExternalValue(cachedHeight)))
+            ||
+
+            ("20.0".equals(String.valueOf(StrictGeomUtility.toExternalValue(cachedHeight))
+            )
+            )))
     {
       if (getElementType() instanceof BandType)
       {
-      PrintStream ps = null;
-      try {
-        ps =  new PrintStream(new FileOutputStream("stacktrace.dmp", true));
-        new FilePrinter(ps).print(this);
-        if ("Section-0".equals(this.getParent().getParent().getName()) &&
-            "Table of Contents".equals(this.getParent().getParent().getParent().getParent().getParent().getName())) {
+        PrintStream ps = null;
+        try {
+          ps =  new PrintStream(new FileOutputStream("stacktrace.dmp",
+              true));
+          new FilePrinter(ps).print(this);
+          if ("Section-0".equals(this.getParent().getParent().getName()) &&
+              "Table of
+          Contents".equals(this.getParent().getParent().getParent().getParent().getParent().getName()))
+          {
 
-          ps.print("In TOC, ");
-          ps.println("height set to " + cachedHeight);
+            ps.print("In TOC, ");
+            ps.println("height set to " + cachedHeight);
 
-        new Exception().printStackTrace(ps);
+            new Exception().printStackTrace(ps);
+          }
+        } catch (Exception e) {
+
+        } finally {
+          ps.close();
         }
-      } catch (Exception e) {
-
-      } finally {
-        ps.close();
-      }
       }
 
     }
@@ -908,7 +918,8 @@ public abstract class RenderNode implements Cloneable
                                      final long drawAreaWidth, final long drawAreaHeight,
                                      final boolean overflowX, final boolean overflowY)
   {
-    if (getStyleSheet().getBooleanStyleProperty(ElementStyleKeys.VISIBLE) == false)
+    if
+        (getStyleSheet().getBooleanStyleProperty(ElementStyleKeys.VISIBLE) == false)
     {
       return false;
     }
@@ -1138,3 +1149,4 @@ public abstract class RenderNode implements Cloneable
 
 
 }
+
