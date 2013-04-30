@@ -23,6 +23,9 @@ import java.io.PrintStream;
 
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.ReportAttributeMap;
+import org.pentaho.reporting.engine.classic.core.filter.types.bands.BandType;
+import org.pentaho.reporting.engine.classic.core.layout.FileModelPrinter;
+import org.pentaho.reporting.engine.classic.core.layout.ModelPrinter;
 import org.pentaho.reporting.engine.classic.core.layout.model.context.NodeLayoutProperties;
 import org.pentaho.reporting.engine.classic.core.metadata.ElementType;
 import org.pentaho.reporting.engine.classic.core.states.ReportStateKey;
@@ -741,6 +744,23 @@ public abstract class RenderNode implements Cloneable
     return cachedHeight;
   }
 
+  private static int counter;
+
+  private class FilePrinter extends ModelPrinter
+  {
+    private PrintStream ps;
+
+    private FilePrinter(final PrintStream ps)
+    {
+      this.ps = ps;
+    }
+
+    protected void print(final String s)
+    {
+      ps.print(s);
+    }
+  }
+
   public void setCachedHeight(final long cachedHeight)
   {
     if (cachedHeight < 0)
@@ -753,9 +773,12 @@ public abstract class RenderNode implements Cloneable
         ("20.0".equals(String.valueOf(StrictGeomUtility.toExternalValue(cachedHeight)) )
         )))
     {
+      if (getElementType() instanceof BandType)
+      {
       PrintStream ps = null;
       try {
         ps =  new PrintStream(new FileOutputStream("stacktrace.dmp", true));
+        new FilePrinter(ps).print(this);
         if ("Section-0".equals(this.getParent().getParent().getName()) &&
             "Table of Contents".equals(this.getParent().getParent().getParent().getParent().getParent().getName())) {
 
@@ -768,6 +791,7 @@ public abstract class RenderNode implements Cloneable
 
       } finally {
         ps.close();
+      }
       }
 
     }

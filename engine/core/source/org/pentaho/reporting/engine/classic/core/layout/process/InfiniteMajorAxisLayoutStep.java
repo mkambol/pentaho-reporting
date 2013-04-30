@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 import org.pentaho.reporting.engine.classic.core.ElementAlignment;
+import org.pentaho.reporting.engine.classic.core.filter.types.bands.BandType;
 import org.pentaho.reporting.engine.classic.core.layout.model.FinishedRenderNode;
 import org.pentaho.reporting.engine.classic.core.layout.model.LayoutNodeTypes;
 import org.pentaho.reporting.engine.classic.core.layout.model.LogicalPageBox;
@@ -48,6 +49,7 @@ import org.pentaho.reporting.engine.classic.core.layout.process.valign.NodeAlign
 import org.pentaho.reporting.engine.classic.core.layout.process.valign.ReplacedContentAlignContext;
 import org.pentaho.reporting.engine.classic.core.layout.process.valign.TextElementAlignContext;
 import org.pentaho.reporting.engine.classic.core.layout.process.valign.VerticalAlignmentProcessor;
+import org.pentaho.reporting.libraries.base.util.DebugLog;
 
 
 /**
@@ -524,6 +526,11 @@ public final class InfiniteMajorAxisLayoutStep extends AbstractMajorAxisLayoutSt
     if (breakState.isActive() == false || breakState.isSuspended())
     {
       return;
+    }
+
+    if (inlineRenderBox.getParent().getElementType() instanceof BandType)
+    {
+      DebugLog.logHere();
     }
 
     final BoxAlignContext boxAlignContext = breakState.closeContext();

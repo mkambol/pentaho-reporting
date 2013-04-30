@@ -32,6 +32,7 @@ import static junit.framework.Assert.assertNotNull;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
+import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.ReportProcessingException;
 import org.pentaho.reporting.engine.classic.core.layout.FileModelPrinter;
@@ -55,6 +56,11 @@ public class ShortTest extends GoldTestBase
 
   public ShortTest()
   {
+    final PrintStream err = System.err;
+    final PrintStream out = System.out;
+    ClassicEngineBoot.getInstance().start();
+    System.setErr(err);
+    System.setOut(out);
   }
 
   @Test

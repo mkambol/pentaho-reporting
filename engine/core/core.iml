@@ -20,17 +20,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="libdocbundle" exported="" />
-    <orderEntry type="module" module-name="libfonts" exported="" />
-    <orderEntry type="module" module-name="libformat" exported="" />
-    <orderEntry type="module" module-name="libformula" exported="" />
-    <orderEntry type="module" module-name="libloader" exported="" />
-    <orderEntry type="module" module-name="libserializer" exported="" />
-    <orderEntry type="module" module-name="librepository" exported="" />
-    <orderEntry type="module" module-name="libxml" exported="" />
-    <orderEntry type="module" module-name="libswing" exported="" />
-    <orderEntry type="module" module-name="libbase" exported="" />
-    <orderEntry type="module" module-name="flute" exported="" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
@@ -52,6 +41,16 @@
         </SOURCES>
         <jarDirectory url="file://$MODULE_DIR$/test-lib" recursive="false" />
         <jarDirectory url="file://$MODULE_DIR$/test-lib" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/lib/internal" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/lib/internal" recursive="false" />
       </library>
     </orderEntry>
   </component>
