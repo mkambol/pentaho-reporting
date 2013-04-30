@@ -760,7 +760,7 @@ public abstract class RenderNode implements Cloneable {
 
     protected void print(final String s)
     {
-      ps.print(s);
+      ps.println(s);
     }
   }
 
