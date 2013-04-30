@@ -67,8 +67,12 @@ public class ShortTest extends GoldTestBase
   public void testOne() throws Exception
   {
 
-    final File file = new File("./test-gold/reports/Prd-3514.prpt");
+    String path = System.getProperty("repPath");
 
+    final File file = new File(path); //"./test-gold/reports/Prd-3514-trimmed.prpt");
+
+    new File("stacktrace.dmp").delete();
+    new File("output2.log").delete();
 
     MasterReport originalReport = parseReport(file);
     MasterReport tunedReport = tuneForTesting(originalReport);
