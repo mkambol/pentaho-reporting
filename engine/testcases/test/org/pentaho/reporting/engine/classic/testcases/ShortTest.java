@@ -21,6 +21,7 @@ package org.pentaho.reporting.engine.classic.testcases;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -70,7 +71,7 @@ public class ShortTest extends GoldTestBase
     String path = System.getProperty("repPath");
 
     if (path == null) {
-      path = "./test-gold/reports/Prd-3514-trimmed.prpt";
+      path = "./test-gold/reports/";
 
     }
     final File file = new File(path); //"./test-gold/reports/Prd-3514-trimmed.prpt");
@@ -78,6 +79,28 @@ public class ShortTest extends GoldTestBase
     new File("stacktrace.dmp").delete();
     new File("output2.log").delete();
 
+    File[] reports =new File(path).listFiles(new FileFilter(){
+
+      public boolean accept(final File pathname)
+      {
+        return (pathname.getPath().matches(".*Prd-3514.*prpt"));
+      }
+    });
+
+    for (File report : reports) {
+     executeRep(report);
+    }
+
+   // originalReport = parseReport(file);
+   // tunedReport = tuneForTesting(originalReport);
+   // report = serializeDeserialize(tunedReport);
+   // report = tuneForLegacyMode(report);
+
+   // executeAndOutputReport(file, report, "SERIALIZE-" + fileName);
+  }
+
+  private void executeRep(final File file) throws Exception
+  {
     MasterReport originalReport = parseReport(file);
     MasterReport tunedReport = tuneForTesting(originalReport);
     MasterReport report = postProcess(tunedReport);
@@ -87,13 +110,6 @@ public class ShortTest extends GoldTestBase
     final String fileName = IOUtils.getInstance().stripFileExtension(file.getName());
 
     executeAndOutputReport(file, report, fileName);
-
-   // originalReport = parseReport(file);
-   // tunedReport = tuneForTesting(originalReport);
-   // report = serializeDeserialize(tunedReport);
-   // report = tuneForLegacyMode(report);
-
-   // executeAndOutputReport(file, report, "SERIALIZE-" + fileName);
   }
 
   private void executeAndOutputReport(final File file,
