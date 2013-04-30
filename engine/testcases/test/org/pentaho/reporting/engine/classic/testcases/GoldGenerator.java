@@ -37,6 +37,8 @@ public class GoldGenerator extends GoldenSampleGenerator
     {
       throw new IllegalStateException();
     }
-    new GoldGenerator().runAllGoldReports();
+    new GoldGenerator().runSingleGoldReport("Prd-3514.prpt", ReportProcessingMode.current);
+    new GoldGenerator().runSingleGoldReport("Prd-3514.prpt", ReportProcessingMode.legacy);
+    new GoldGenerator().runSingleGoldReport("Prd-3514.prpt", ReportProcessingMode.migration);
   }
 }
