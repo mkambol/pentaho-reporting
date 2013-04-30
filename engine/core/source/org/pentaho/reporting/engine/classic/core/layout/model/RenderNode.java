@@ -17,6 +17,10 @@
 
 package org.pentaho.reporting.engine.classic.core.layout.model;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.ReportAttributeMap;
 import org.pentaho.reporting.engine.classic.core.layout.model.context.NodeLayoutProperties;
@@ -27,6 +31,7 @@ import org.pentaho.reporting.engine.classic.core.style.StyleSheet;
 import org.pentaho.reporting.engine.classic.core.style.VerticalTextAlign;
 import org.pentaho.reporting.engine.classic.core.util.InstanceID;
 import org.pentaho.reporting.engine.classic.core.util.geom.StrictBounds;
+import org.pentaho.reporting.engine.classic.core.util.geom.StrictGeomUtility;
 import org.pentaho.reporting.libraries.base.config.Configuration;
 
 public abstract class RenderNode implements Cloneable
@@ -743,6 +748,29 @@ public abstract class RenderNode implements Cloneable
       throw new IndexOutOfBoundsException("'cached height' cannot be negative, was " + cachedHeight);
     }
     this.cachedHeight = cachedHeight;
+
+    if (  ("14.024".equals(String.valueOf(StrictGeomUtility.toExternalValue(cachedHeight)))  ||
+        ("20.0".equals(String.valueOf(StrictGeomUtility.toExternalValue(cachedHeight)) )
+        )))
+    {
+      PrintStream ps = null;
+      try {
+        ps =  new PrintStream(new FileOutputStream("stacktrace.dmp", true));
+        if ("Section-0".equals(this.getParent().getParent().getName()) &&
+            "Table of Contents".equals(this.getParent().getParent().getParent().getParent().getParent().getName())) {
+
+          ps.print("In TOC, ");
+          ps.println("height set to " + cachedHeight);
+
+        new Exception().printStackTrace(ps);
+        }
+      } catch (Exception e) {
+
+      } finally {
+        ps.close();
+      }
+
+    }
   }
 
   public void apply()

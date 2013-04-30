@@ -371,29 +371,35 @@ public final class InfiniteMajorAxisLayoutStep extends AbstractMajorAxisLayoutSt
           final long boxTop = box.getCachedY() + insetTop + (extraHeight / 2);
           final long delta = boxTop - childY1;
           CacheBoxShifter.shiftBoxChilds(box, delta);
-          if (box instanceof ParagraphRenderBox) {
-            PrintStream ps = null;
-            try {
-            ps =  new PrintStream(new FileOutputStream("output.log", true));
-            ps.println("ParagraphRenderBox ******");
-            ps.println("y: " + box.getCachedY());
-            ps.println("extraHeight: " + extraHeight);
-            ps.println("boxTop: " + boxTop);
-            ps.println("insetTop:   " + insetTop);
-            ps.println("childY1: " + childY1);
-            ps.println("computedContentHeight: " + computedContentHeight);
-            ps.println("usedHeight: " + usedHeight);
-            } catch (FileNotFoundException e) {
 
-            } finally {
-              ps.close();
-            }
-          }
         }
       }
     }
 
     final long retval = Math.max(0, computedContentHeight + insetTop + insetBottom);
+    if (box instanceof ParagraphRenderBox) {
+      PrintStream ps = null;
+      try {
+        ps =  new PrintStream(new FileOutputStream("output2.log", true));
+        ps.println("ParagraphRenderBox ******");
+        ps.println("y: " + box.getCachedY());
+        ps.println("insetTop:   " + insetTop);
+        ps.println("insetBottom:   " + insetBottom);
+        ps.println("childY1: " + childY1);
+        ps.println("computedContentHeight: " + computedContentHeight);
+        ps.println("usedHeight: " + usedHeight);
+        ps.println("retval (height): " + retval);
+        ps.println("box.getNodeType() == LayoutNodeTypes.TYPE_BOX_WATERMARK: " + (box.getNodeType() == LayoutNodeTypes.TYPE_BOX_WATERMARK));
+      } catch (FileNotFoundException e) {
+
+      } finally {
+        ps.close();
+      }
+    }
+
+
+
+
     // For the water-mark area, this computation is different. The Watermark-area uses the known height of
     // the parent (=the page size)
     if (box.getNodeType() == LayoutNodeTypes.TYPE_BOX_WATERMARK)
