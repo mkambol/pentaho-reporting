@@ -788,8 +788,7 @@ public abstract class RenderNode implements Cloneable {
               true));
           new FilePrinter(ps).print(this);
           if ("Section-0".equals(this.getParent().getParent().getName()) &&
-              "Table of
-          Contents".equals(this.getParent().getParent().getParent().getParent().getParent().getName()))
+              "Table of Contents".equals(this.getParent().getParent().getParent().getParent().getParent().getName()))
           {
 
             ps.print("In TOC, ");
