@@ -69,6 +69,10 @@ public class ShortTest extends GoldTestBase
 
     String path = System.getProperty("repPath");
 
+    if (path == null) {
+      path = "./test-gold/reports/Prd-3514-trimmed.prpt";
+
+    }
     final File file = new File(path); //"./test-gold/reports/Prd-3514-trimmed.prpt");
 
     new File("stacktrace.dmp").delete();
