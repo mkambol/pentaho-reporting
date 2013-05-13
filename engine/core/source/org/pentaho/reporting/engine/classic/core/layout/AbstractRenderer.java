@@ -47,11 +47,11 @@ import org.pentaho.reporting.engine.classic.core.layout.process.ComputeStaticPro
 import org.pentaho.reporting.engine.classic.core.layout.process.InfiniteMajorAxisLayoutStep;
 import org.pentaho.reporting.engine.classic.core.layout.process.InfiniteMinorAxisLayoutStep;
 import org.pentaho.reporting.engine.classic.core.layout.process.ParagraphLineBreakStep;
-import org.pentaho.reporting.engine.classic.core.layout.process.RevalidateAllAxisLayoutStep;
 import org.pentaho.reporting.engine.classic.core.layout.process.RollbackStep;
 import org.pentaho.reporting.engine.classic.core.layout.process.TableValidationStep;
 import org.pentaho.reporting.engine.classic.core.layout.process.ValidateModelStep;
 import org.pentaho.reporting.engine.classic.core.states.ReportStateKey;
+import org.pentaho.reporting.engine.classic.core.states.process.ProcessState;
 import org.pentaho.reporting.engine.classic.core.util.InstanceID;
 
 /**
@@ -73,7 +73,6 @@ public abstract class AbstractRenderer implements Renderer
   private CanvasMinorAxisLayoutStep canvasMinorAxisLayoutStep;
   private InfiniteMajorAxisLayoutStep majorAxisLayoutStep;
   private CanvasMajorAxisLayoutStep canvasMajorAxisLayoutStep;
-  private RevalidateAllAxisLayoutStep revalidateAllAxisLayoutStep;
 
   private ValidateSafeToStoreStateStep validateSafeToStoreStateStep;
   private TableValidationStep tableValidationStep;
@@ -94,7 +93,6 @@ public abstract class AbstractRenderer implements Renderer
   private boolean readOnly;
   private boolean paranoidChecks;
   private boolean wrapProgressMarkerInSection;
-  private boolean clearedHeaderAndFooter;
 
   private LayoutResult lastValidateResult;
 
@@ -110,7 +108,6 @@ public abstract class AbstractRenderer implements Renderer
     this.canvasMinorAxisLayoutStep = new CanvasMinorAxisLayoutStep();
     this.majorAxisLayoutStep = new InfiniteMajorAxisLayoutStep();
     this.canvasMajorAxisLayoutStep = new CanvasMajorAxisLayoutStep();
-    this.revalidateAllAxisLayoutStep = new RevalidateAllAxisLayoutStep();
     this.validateSafeToStoreStateStep = new ValidateSafeToStoreStateStep();
     this.applyCachedValuesStep = new ApplyCachedValuesStep();
     this.commitStep = new CommitStep();
@@ -213,7 +210,7 @@ public abstract class AbstractRenderer implements Renderer
     staticPropertiesStep.initialize(metaData, processingContext);
     canvasMinorAxisLayoutStep.initialize(metaData);
     minorAxisLayoutStep.initialize(metaData);
-    revalidateAllAxisLayoutStep.initialize(metaData);
+    canvasMajorAxisLayoutStep.initialize(metaData);
   }
 
   public void startSubReport(final ReportDefinition report, final InstanceID insertationPoint)
@@ -415,7 +412,6 @@ public abstract class AbstractRenderer implements Renderer
     canvasMinorAxisLayoutStep.compute(pageBox); // VISUAL
     majorAxisLayoutStep.compute(pageBox); // VISUAL
     canvasMajorAxisLayoutStep.compute(pageBox); // VISUAL
-    revalidateAllAxisLayoutStep.compute(pageBox); // VISUAL
 
     if (preparePagination(pageBox) == false)
     {
@@ -510,7 +506,6 @@ public abstract class AbstractRenderer implements Renderer
       canvasMinorAxisLayoutStep.compute(pageBox);
       majorAxisLayoutStep.compute(pageBox);
       canvasMajorAxisLayoutStep.compute(pageBox);
-      revalidateAllAxisLayoutStep.compute(pageBox);
 
       if (preparePagination(pageBox) == false)
       {
@@ -732,5 +727,34 @@ public abstract class AbstractRenderer implements Renderer
     pageBox.getRepeatFooterArea().clear();
     pageBox.getHeaderArea().clear();
     pageBox.getWatermarkArea().clear();
+  }
+
+  /**
+   * This is a debug helper function. It is not used in normal report runs. It helps debug layouter states
+   * and the roll-back system by dumping all layouts into a directory on the file system for automated diffs.
+   *
+   * @param state
+   * @param print
+   * @param rollback
+   */
+  @SuppressWarnings("UnusedDeclaration")
+  public void printLayoutStateToFile(final ProcessState state,
+                                     final boolean print,
+                                     final boolean rollback)
+  {
+    /*
+    if (((state.getSequenceCounter() <= 14440 || state.getSequenceCounter() >= 14445)) ||
+        (state.getSequenceCounter() % 1) != 0)
+    {
+      return;
+    }
+
+*/
+    String fileName = "test-output/" + state.getSequenceCounter();
+    fileName += print ? "-print" : "-paginate";
+    fileName += rollback ? "-rb" : "";
+    fileName += ".xml";
+
+    FileModelPrinter.print(fileName, getPageBox());
   }
 }

@@ -1171,11 +1171,10 @@ public abstract class RenderBox extends RenderNode
         ", y='" + getY() + '\'' +
         ", width='" + getWidth() + '\'' +
         ", height='" + getHeight() + '\'' +
-        ", hexId='" + System.identityHashCode(this) + '\'' +
         ", elementType='" + getElementType() + '\'' +
         ", finishedPaginate='" + isFinishedPaginate() + '\'' +
         ", finishedTable='" + isFinishedTable() + '\'' +
-        ", commited='" + isCommited() + '\'' +
+        ", committed='" + isCommited() + '\'' +
         '}';
   }
 
@@ -1277,7 +1276,7 @@ public abstract class RenderBox extends RenderNode
     updateChangeTracker();
   }
 
-  public boolean isDeepFinished()
+  public boolean isDeepFinishedTable()
   {
     return isFlag(FLAG_BOX_DEEP_FINISHED);
   }

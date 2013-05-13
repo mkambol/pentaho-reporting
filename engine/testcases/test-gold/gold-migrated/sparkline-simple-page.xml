@@ -41,7 +41,7 @@
                 <spacer width="2.77" height="0.0" preserve="true"/>
                 <text x="168.33" y="0.0" width="36.1" height="10.0">formula:</text>
               </inline>
-              <replaced-content x="204.43" y="0.0" width="40.0" height="10.0" source="null" content-width="0.0" content-height="0.0" requested-width="40" requested-height="auto" raw-object-type="org.pentaho.reporting.libraries.resourceloader.factory.drawable.DrawableWrapper">
+              <replaced-content x="204.43" y="0.0" width="40.0" height="10.0" source="null" content-width="0.0" content-height="0.0" requested-width="40.0" requested-height="auto" raw-object-type="org.pentaho.reporting.libraries.resourceloader.factory.drawable.DrawableWrapper">
                 <attribute xmlns:autoGenNs="http://reporting.pentaho.org/namespaces/engine/attributes/core" autoGenNs:element-type="content-field"/>
                 <attribute xmlns:autoGenNs="http://reporting.pentaho.org/namespaces/engine/attributes/core" autoGenNs:field="sparkline"/>
               </replaced-content>
@@ -128,9 +128,9 @@
           </replaced-content>
         </canvas>
       </block>
-      <block name="relational-group" type="AutoRenderBox" x="0.0" y="120.0" width="451.0" height="0.0" color="black" font-face="Serif" font-size="10" font-style-bold="false" font-style-italics="false" font-style-underline="false" font-style-strikethrough="false">
+      <block type="AutoRenderBox" x="0.0" y="120.0" width="451.0" height="0.0" color="black" font-face="Serif" font-size="10" font-style-bold="false" font-style-italics="false" font-style-underline="false" font-style-strikethrough="false">
         <attribute xmlns:autoGenNs="http://reporting.pentaho.org/namespaces/engine/attributes/core" autoGenNs:element-type="relational-group"/>
-        <block name="group-data-body" type="AutoRenderBox" x="0.0" y="120.0" width="451.0" height="0.0" color="black" font-face="Serif" font-size="10" font-style-bold="false" font-style-italics="false" font-style-underline="false" font-style-strikethrough="false">
+        <block type="AutoRenderBox" x="0.0" y="120.0" width="451.0" height="0.0" color="black" font-face="Serif" font-size="10" font-style-bold="false" font-style-italics="false" font-style-underline="false" font-style-strikethrough="false">
           <attribute xmlns:autoGenNs="http://reporting.pentaho.org/namespaces/engine/attributes/core" autoGenNs:element-type="group-data-body"/>
         </block>
       </block>
