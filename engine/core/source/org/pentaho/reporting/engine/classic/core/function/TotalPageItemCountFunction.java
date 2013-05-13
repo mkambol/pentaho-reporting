@@ -17,14 +17,14 @@
 
 package org.pentaho.reporting.engine.classic.core.function;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.pentaho.reporting.engine.classic.core.event.PageEventListener;
 import org.pentaho.reporting.engine.classic.core.event.ReportEvent;
 import org.pentaho.reporting.engine.classic.core.states.LayoutProcess;
-import org.pentaho.reporting.engine.classic.core.states.ReportStateKey;
-import org.pentaho.reporting.engine.classic.core.util.Sequence;
 
 /**
  * A report function that counts the total number of items contained in groups in a report. Resets the
@@ -43,16 +43,60 @@ import org.pentaho.reporting.engine.classic.core.util.Sequence;
  */
 public class TotalPageItemCountFunction extends TotalItemCountFunction implements PageEventListener
 {
+
+  /**
+   * Convenience class to manage getting and putting values stored
+   * by page and group.
+   */
+  private class PageGroupValues
+  {
+    private Map<Integer, Map<Integer, Object>> pagedResults;
+
+    private PageGroupValues()
+    {
+      pagedResults = new HashMap<Integer, Map<Integer, Object>>();
+    }
+
+    public Object get(final int page, final int group)
+    {
+      if (pagedResults.containsKey(page) &&
+          pagedResults.get(page).containsKey(group))
+      {
+        return pagedResults.get(page).get(group);
+      }
+      else
+      {
+        return 0;
+      }
+    }
+
+    public void put(final int page, final int group, final Object value)
+    {
+      final Map<Integer, Object> map;
+      if (pagedResults.containsKey(page))
+      {
+        map = pagedResults.get(page);
+      }
+      else
+      {
+        map = new HashMap<Integer, Object>();
+        pagedResults.put(page, map);
+      }
+      map.put(group, value);
+    }
+  }
+
   /**
    * holds the collection of values associated with pages and groups
    */
-  private transient PageGroupValues values = new PageGroupValues();
+  private transient PageGroupValues values;
 
   private int pageIndex = 0;
   private int groupIndex = 0;
 
   public TotalPageItemCountFunction()
   {
+    values = new PageGroupValues();
   }
 
   protected boolean isPrepareRunLevel(final ReportEvent event)
@@ -103,7 +147,8 @@ public class TotalPageItemCountFunction extends TotalItemCountFunction implement
     clear();
   }
 
-  public Object getValue() {
+  public Object getValue()
+  {
     return values.get(pageIndex, groupIndex);
   }
 
@@ -129,38 +174,17 @@ public class TotalPageItemCountFunction extends TotalItemCountFunction implement
   }
 
   /**
-   * Convenience class to manage getting and putting values stored
-   * by page and group.
+   * Helper function for the serialization.
+   *
+   * @param in the input stream.
+   * @throws java.io.IOException    if an IO error occured.
+   * @throws ClassNotFoundException if a required class could not be found.
    */
-  private class PageGroupValues {
-    private Map<Integer, Map<Integer, Object>> pagedResults =
-        new HashMap<Integer, Map<Integer, Object>>();;
-
-    Object get(int page, int group) {
-      if (pagedResults.containsKey(page) &&
-          pagedResults.get(page).containsKey(group))
-      {
-        return pagedResults.get(page).get(group);
-      }
-      else
-      {
-        return 0;
-      }
-    }
-
-    void put(int page, int group, Object value) {
-      Map<Integer, Object> map;
-      if (pagedResults.containsKey(page))
-      {
-        map = pagedResults.get(page);
-      }
-      else
-      {
-        map = new HashMap<Integer, Object>();
-      }
-      map.put(group, value);
-      pagedResults.put(page, map);
-    }
-
+  private void readObject(final ObjectInputStream in)
+      throws IOException, ClassNotFoundException
+  {
+    in.defaultReadObject();
+    values = new PageGroupValues();
   }
+
 }
