@@ -23,18 +23,18 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.vfs.FileName;
-import org.apache.commons.vfs.FileSelector;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileType;
-import org.apache.commons.vfs.provider.AbstractFileObject;
-import org.apache.commons.vfs.provider.AbstractFileSystem;
+import org.apache.commons.vfs2.FileSelector;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileType;
+import org.apache.commons.vfs2.provider.AbstractFileName;
+import org.apache.commons.vfs2.provider.AbstractFileObject;
+import org.apache.commons.vfs2.provider.AbstractFileSystem;
 
 public class WebSolutionFileObject extends AbstractFileObject
 {
   private SolutionFileModel fs;
 
-  public WebSolutionFileObject(final FileName name,
+  public WebSolutionFileObject(final AbstractFileName name,
                                final AbstractFileSystem fileSystem,
                                final SolutionFileModel fs)
   {
@@ -91,7 +91,7 @@ public class WebSolutionFileObject extends AbstractFileObject
 
   /**
    * Lists the children of this file.  Is only called if {@link #doGetType}
-   * returns {@link org.apache.commons.vfs.FileType#FOLDER}.  The return value of this method
+   * returns {@link org.apache.commons.vfs2.FileType#FOLDER}.  The return value of this method
    * is cached, so the implementation can be expensive.
    */
   protected String[] doListChildren() throws Exception
@@ -101,7 +101,7 @@ public class WebSolutionFileObject extends AbstractFileObject
 
   /**
    * Returns the size of the file content (in bytes).  Is only called if
-   * {@link #doGetType} returns {@link org.apache.commons.vfs.FileType#FILE}.
+   * {@link #doGetType} returns {@link org.apache.commons.vfs2.FileType#FILE}.
    */
   protected long doGetContentSize() throws Exception
   {
@@ -110,7 +110,7 @@ public class WebSolutionFileObject extends AbstractFileObject
 
   /**
    * Determines if this file is hidden.  Is only called if {@link #doGetType}
-   * does not return {@link org.apache.commons.vfs.FileType#IMAGINARY}.
+   * does not return {@link org.apache.commons.vfs2.FileType#IMAGINARY}.
    * <p/>
    * This implementation always returns false.
    */
@@ -121,7 +121,7 @@ public class WebSolutionFileObject extends AbstractFileObject
 
   /**
    * Returns the last modified time of this file.  Is only called if
-   * {@link #doGetType} does not return {@link org.apache.commons.vfs.FileType#IMAGINARY}.
+   * {@link #doGetType} does not return {@link org.apache.commons.vfs2.FileType#IMAGINARY}.
    * <p/>
    * This implementation throws an exception.
    */
@@ -132,7 +132,7 @@ public class WebSolutionFileObject extends AbstractFileObject
 
   /**
    * Returns the attributes of this file.  Is only called if {@link #doGetType}
-   * does not return {@link org.apache.commons.vfs.FileType#IMAGINARY}.
+   * does not return {@link org.apache.commons.vfs2.FileType#IMAGINARY}.
    * <p/>
    * This implementation always returns an empty map.
    */
@@ -153,7 +153,7 @@ public class WebSolutionFileObject extends AbstractFileObject
 
   /**
    * Sets an attribute of this file.  Is only called if {@link #doGetType}
-   * does not return {@link org.apache.commons.vfs.FileType#IMAGINARY}.
+   * does not return {@link org.apache.commons.vfs2.FileType#IMAGINARY}.
    * <p/>
    * This implementation throws an exception.
    */
@@ -174,7 +174,7 @@ public class WebSolutionFileObject extends AbstractFileObject
 
   /**
    * Creates an input stream to read the file content from.  Is only called
-   * if {@link #doGetType} returns {@link org.apache.commons.vfs.FileType#FILE}.
+   * if {@link #doGetType} returns {@link org.apache.commons.vfs2.FileType#FILE}.
    * <p/>
    * <p>It is guaranteed that there are no open output streams for this file
    * when this method is called.
@@ -208,7 +208,7 @@ public class WebSolutionFileObject extends AbstractFileObject
   /**
    * Creates this file as a folder.  Is only called when:
    * <ul>
-   * <li>{@link #doGetType} returns {@link org.apache.commons.vfs.FileType#IMAGINARY}.
+   * <li>{@link #doGetType} returns {@link org.apache.commons.vfs2.FileType#IMAGINARY}.
    * <li>The parent folder exists and is writeable, or this file is the
    * root of the file system.
    * </ul>
